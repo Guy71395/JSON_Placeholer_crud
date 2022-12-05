@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    username: <input id="u_username">
+    email: <input id="u_email">
+    <button onclick="addData()">Add data</button>
+    <div id="display"></div>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        const MY_SERVER = "https://jsonplaceholder.typicode.com/users/" // json placeholder server
+
+        const loadData = async() => {
+            // GET (read)
+            const res = await axios.get(MY_SERVER)
+            display.innerHTML= res.data.map(use_r => `<h1>
+                <button onclick="delData(${use_r.id})">Delete</button>
+                <button onclick="updData(${use_r.id})">Update</button>
+                username: ${use_r.username} |  email : ${use_r.email} </h1> `).join("")
+            console.log(res.data)
+        }
+        loadData()
+
+        // POST (create)
+        const addData = () => {
+            axios.post(MY_SERVER,{ username:u_username.value, email: u_email.value}).then((res) => console.log(res.data))
+        }
+
+        // DELETE (delete)
+        const delData = (id) => {
+            axios.delete(MY_SERVER+id).then((res) => console.log(res.data))
+        }
+
+        // PUT (update)
+        const updData = async(id) => {
+           await axios.put(MY_SERVER+id,{ username:u_username.value, email: u_email.value}).then((res) => console.log(res.data))
+           loadData()
+        }
+    </script>
+</body>
+</html>
